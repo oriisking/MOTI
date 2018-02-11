@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "476537269106",
+    "firebase_url": "https://moti-4fd0b.firebaseio.com",
+    "project_id": "moti-4fd0b",
+    "storage_bucket": "moti-4fd0b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476537269106:android:09a35b389e3a7052",
+        "android_client_info": {
+          "package_name": "com.example.moti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "476537269106-t3etk58m1vtjiodhmcsvvmqqhdkfqtup.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.moti",
+            "certificate_hash": "17d540259caa53f0fb7ccf9974cc3cf0e62963f6"
+          }
+        },
+        {
+          "client_id": "476537269106-hrtesv42sl0gtcg5k7bm0cid7cf84ank.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwGK7PlKFthtuNZ_l3FWnHiuKhYMbKWgM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "476537269106-hrtesv42sl0gtcg5k7bm0cid7cf84ank.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
