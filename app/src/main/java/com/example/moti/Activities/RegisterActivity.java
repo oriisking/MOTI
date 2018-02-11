@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn = (ImageButton)findViewById(R.id.signUpButton);
         registerCB = (CheckBox)findViewById(R.id.registerCB);
 
-
+        registerBtn.setClickable(false);
         registerCB.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -70,6 +70,10 @@ public class RegisterActivity extends AppCompatActivity {
                 {
                     registerBtn.setBackgroundResource(R.drawable.signup_button);
                     registerBtn.setClickable(true);
+                }
+                else {
+                    registerBtn.setBackgroundResource(R.drawable.signup_gray_button);
+                    registerBtn.setClickable(false);
                 }
             }
 
@@ -94,60 +98,42 @@ public class RegisterActivity extends AppCompatActivity {
         final String confirmPassword = registerConfirmPassword.getText().toString().trim();
         name = registerName.getText().toString().trim();
 
-        if(!isEmpty(email)
+        if (!isEmpty(email)
                 && !isEmpty(password)
-                && !isEmpty(confirmPassword))
-        {
-            if(isValidEmail(email))
-            {
-                if(doStringsMatch(password,confirmPassword))
-                {
+                && !isEmpty(confirmPassword)) {
+            if (isValidEmail(email)) {
+                if (doStringsMatch(password, confirmPassword)) {
                     //Enter register code here
-                    registerNewEmail(email,password);
-                }
-                else
-                {
+                    registerNewEmail(email, password);
+                } else {
                     mDialog.dismiss();
                     Toast.makeText(this, "Passwords does not match", Toast.LENGTH_SHORT).show();
                 }
-            }
-            else
-            {
+            } else {
                 mDialog.dismiss();
 
                 Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
             }
 
-        }
-        else
-        {
+        } else {
             mDialog.dismiss();
 
             Toast.makeText(this, "Please fill all the required fields", Toast.LENGTH_SHORT).show();
         }
 
 
-
-
-
-
-
-
     }
-    private void sendVerificationEmail(){
+
+    private void sendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user != null)
-        {
+        if (user != null) {
             user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful())
-                    {
+                    if (task.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, "Sent verification email", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(RegisterActivity.this, "Coul'dnt send verification email", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -157,20 +143,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+    private void registerNewEmail(String email, String password) {
 
-
-
-
-
-    private void registerNewEmail(String email, String password)
-    {
-
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password).addOnCompleteListener(
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        {
+                        if (task.isSuccessful()) {
                             //Sending email verification
                             sendVerificationEmail();
 
@@ -179,8 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                             FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful())
-                                    {
+                                    if (task.isSuccessful()) {
                                         Toast.makeText(RegisterActivity.this, "Completed display name change", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -197,9 +175,7 @@ public class RegisterActivity extends AppCompatActivity {
                             mDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Registered Succesfully, Please Verify Your Email!", Toast.LENGTH_SHORT).show();
                             startActivity(loginIntent);
-                        }
-                        else
-                        {
+                        } else {
                             Toast.makeText(RegisterActivity.this, "Unable to register", Toast.LENGTH_SHORT).show();
                             mDialog.dismiss();
                         }
@@ -209,10 +185,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-
-
-    private boolean doStringsMatch( String s1, String s2)
-    {
+    private boolean doStringsMatch(String s1, String s2) {
         return s1.equals(s2);
     }
 
@@ -220,12 +193,11 @@ public class RegisterActivity extends AppCompatActivity {
         return email.contains("@");
     }
 
-    private boolean isEmpty(String s)
-    {
+    private boolean isEmpty(String s) {
         return s.equals("");
     }
-    public boolean checkIfACTVIsEmpty(AutoCompleteTextView actv)
-    {
+
+    public boolean checkIfACTVIsEmpty(AutoCompleteTextView actv) {
         boolean flag = false;
         if (actv.getText().toString().equals(""))
             flag = true;
@@ -233,12 +205,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public boolean checkCompability() {
-        if(!checkIfACTVIsEmpty(registerConfirmPassword) && !checkIfACTVIsEmpty(registerEmail) && !checkIfACTVIsEmpty(registerPassword) && registerCB.isChecked())
-        {
+        if (!checkIfACTVIsEmpty(registerConfirmPassword)
+                && !checkIfACTVIsEmpty(registerEmail)
+                && !checkIfACTVIsEmpty(registerPassword) && registerCB.isChecked()) {
             //Toast.makeText(this, "Compatible", Toast.LENGTH_SHORT).show();
             return true;
-        }
-        else {
+        } else {
             //Toast.makeText(this, "Not Compatible", Toast.LENGTH_SHORT).show();
             return false;
         }

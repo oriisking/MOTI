@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView loginEmail;
     private AutoCompleteTextView loginPassword;
     private ProgressDialog mDialog;
-    private FirebaseAuth  mAuth;
+    private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
@@ -57,20 +57,18 @@ public class LoginActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         //Inits
-        homeIntent = new Intent(this,HomeActivity.class);
+        homeIntent = new Intent(this, HomeActivity.class);
         registerIntent = new Intent(this, RegisterActivity.class);
         loginEmail = (AutoCompleteTextView) findViewById((R.id.userLoginEmail));
         loginPassword = (AutoCompleteTextView) findViewById((R.id.userLoginPassword));
-        loginCB = (CheckBox)findViewById(R.id.loginCheckBox);
+        loginCB = (CheckBox) findViewById(R.id.loginCheckBox);
 
 
         //Setting up the firebase authentication
         setupFirebaseAuth();
 
 
-
     }
-
 
 
     //Sign in button click, implement the login method here
@@ -88,10 +86,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //Check if the user filled the credentials
-        if(!isEmpty(email) && !isEmpty(password))
-        {
+        if (!isEmpty(email) && !isEmpty(password)) {
             //Try to login with the credentials the user inputted
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     //The user is now logged in into the firebase authentication using his credentials.
@@ -108,17 +105,13 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-
-
-
     }
-
-
 
 
     private boolean isEmpty(String s) {
         return s.equals("");
     }
+
     //Sign up text click
     public void buttonRegister(View view) {
         startActivity(registerIntent);
@@ -128,39 +121,43 @@ public class LoginActivity extends AppCompatActivity {
 -----------------------------------------Firebase Setup------------------------------
  */
 
-    private void setupFirebaseAuth()
-    {
-        mAuthListener = new FirebaseAuth.AuthStateListener(){
+    private void setupFirebaseAuth() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-              FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
 
-              //Check if a user is signed in
-              if(user != null){
+                //Check if a user is signed in
+                if (user != null) {
 
-                  //In case he is and he verified his Email
-                  if(user.isEmailVerified())
-                  {
-                      //Let the user know he is now signed in
-                      Log.d(TAG, "onAuthStateChanged:signed_in: "+user.getUid());
-                      Toast.makeText(LoginActivity.this, "Authenticated with: "+ user.getEmail(), Toast.LENGTH_SHORT).show();
-                      mDialog.dismiss();
-                      startActivity(homeIntent);
-                      finish();
-                  }
-                  else{
+                    //In case he is and he verified his Email
+                    if (user.isEmailVerified()) {
+                        //Let the user know he is now signed in
+                        Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
+                        Toast.makeText(LoginActivity.this, "Authenticated with: " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                        try {
+                            mDialog.dismiss();
+                        } catch (NullPointerException e) {
+                            Log.e("Error", e.getMessage());
+                        }
+                        startActivity(homeIntent);
+                        finish();
+                    } else {
 
-                      //Tell the user to verify his email
-                      mDialog.dismiss();
-                      Toast.makeText(LoginActivity.this, "Please check your inbox for verification email", Toast.LENGTH_SHORT).show();
-                      FirebaseAuth.getInstance().signOut();
-                  }
+                        //Tell the user to verify his email
+                        try {
+                            mDialog.dismiss();
+                        } catch (NullPointerException e) {
+                            Log.e("Error", e.getMessage());
+                        }
+                        Toast.makeText(LoginActivity.this, "Please check your inbox for verification email", Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                    }
 
-              }
-              else{
-                  //User Signed out
-              }
-          }
+                } else {
+                    //User Signed out
+                }
+            }
         };
 
     }
@@ -174,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(mAuthListener != null){
+        if (mAuthListener != null) {
             FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
         }
     }
