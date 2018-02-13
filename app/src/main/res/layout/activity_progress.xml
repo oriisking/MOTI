@@ -60,6 +60,10 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/progress_item"
             android:id="@+id/progress_recyclerview"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
             >
 
         </android.support.v7.widget.RecyclerView>

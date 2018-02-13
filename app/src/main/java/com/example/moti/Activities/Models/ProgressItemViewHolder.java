@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.moti.R;
 
 
@@ -34,6 +35,9 @@ public class ProgressItemViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(ProgressItem pi) {
         date.setText(pi.getDate());
-        image.setImageURI(pi.getImage());
+        image.setImageURI(Uri.parse(pi.getImage()));
+        Glide.with(activity)
+                .load(pi.getImage())
+                .into(image);
     }
 }

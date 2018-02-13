@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +22,14 @@ import com.example.moti.Activities.Models.ProgressItem;
 import com.example.moti.Activities.Models.ProgressItemAdapter;
 import com.example.moti.Manifest;
 import com.example.moti.R;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -94,39 +99,23 @@ public class ProgressActivity extends AppCompatActivity {
         storageRef = FirebaseStorage.getInstance().getReference(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
 
 
-
-        //Code to when a user wants to upload an image from his gallery, research to change to camera image.
-        /*imageBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/jpeg");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
+        databaseRef.addChildEventListener(new ChildEventListener() {
+            public void onChildAdded(DataSnapshot snapshot, String s) {
+                // Get the chat message from the snapshot and add it to the UI
+                ProgressItem pi = snapshot.getValue(ProgressItem.class);
+                adapter.addProgress(pi);
             }
-        });*/
 
-
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
+            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+            public void onCancelled(DatabaseError databaseError) { }
+        });
 
     }
 
     public void progressBackButton(View view) {
         startActivity(homeIntent);
-    }
-
-
-    public void progressAddButton(View view) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //intent.setType("image/jpeg");
-       // intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        startActivityForResult(intent, CAMERA_REQUEST_CODE);
-        Date c = (Date) Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-        formattedDate = df.format(c);
-
-        // Push the chat message to the database
-
-
     }
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -134,7 +123,13 @@ public class ProgressActivity extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
-
+    public void progressAddButton(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Date c = (Date) Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        formattedDate = df.format(c);
+        startActivityForResult(intent, CAMERA_REQUEST_CODE);
+    }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -144,7 +139,6 @@ public class ProgressActivity extends AppCompatActivity {
             Uri selectedImageUri = getImageUri(getApplicationContext(), b);
 
 
-            //mDialog.show();
             // Get a reference to the location where we'll store our photos
             storageRef = storage.getReference(auth.getCurrentUser().getUid().toString());
             // Get a reference to store file at chat_photos/<FILENAME>
@@ -152,24 +146,33 @@ public class ProgressActivity extends AppCompatActivity {
 
             // Upload file to Firebase Storage
 
-
-
-
-            //Check Why it's failing to upload whenever it's inside the onSuccess even when it success
-
-
-
-
-
             photoRef.putFile(selectedImageUri)
                     .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                            //mDialog.dismiss();
                             // When the imag1e has successfully uploaded, we get its download URL
-                            imageUri = taskSnapshot.getDownloadUrl();
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                            pi = new ProgressItem(formattedDate,downloadUrl.toString());
+                            try {
+                                databaseRef.push().setValue(pi).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(ProgressActivity.this, "Failed to upload.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnSuccessListener(ProgressActivity.this, new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(ProgressActivity.this, "Upload Completed.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                            catch (Exception ex)
+                            {
+                                Toast.makeText(ProgressActivity.this, "Error: " + ex.toString(), Toast.LENGTH_SHORT).show();
+                            }
                             // Set the download URL to the message box, so that the user can send it to the database
-                            pi = new ProgressItem(formattedDate,imageUri);
-                            databaseRef.push().setValue(pi);
+
                         }
                     });
 
@@ -179,16 +182,6 @@ public class ProgressActivity extends AppCompatActivity {
             Toast.makeText(this, "Error reading the image.", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 /*
     ---------------------------Security--------------------------------

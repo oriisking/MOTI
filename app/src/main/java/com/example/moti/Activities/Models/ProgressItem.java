@@ -9,13 +9,13 @@ import android.net.Uri;
 public class ProgressItem {
 
     private String date;
-    private Uri image;
+    private String image;
 
     public ProgressItem() {
 
     }
 
-    public ProgressItem(String date, Uri image) {
+    public ProgressItem(String date, String image) {
 
         this.date = date;
         this.image = image;
@@ -29,11 +29,11 @@ public class ProgressItem {
         this.date = date;
     }
 
-    public Uri getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Uri image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
