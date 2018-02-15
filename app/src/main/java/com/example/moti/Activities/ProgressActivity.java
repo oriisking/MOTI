@@ -76,6 +76,7 @@ public class ProgressActivity extends AppCompatActivity {
 
         homeIntent = new Intent(this, HomeActivity.class);
         progressList = (RecyclerView) findViewById(R.id.progress_recyclerview);
+        mDialog = new ProgressDialog(this);
 
         GridLayoutManager glm = new GridLayoutManager(this, 3);
         progressList.setHasFixedSize(false);
@@ -133,8 +134,8 @@ public class ProgressActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
-            //mDialog.setMessage("Uploading...");
-            //mDialog.show();
+            mDialog.setMessage("Uploading...");
+            mDialog.show();
             Bitmap b = (Bitmap)data.getExtras().get("data");
             Uri selectedImageUri = getImageUri(getApplicationContext(), b);
 
@@ -149,7 +150,7 @@ public class ProgressActivity extends AppCompatActivity {
             photoRef.putFile(selectedImageUri)
                     .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                           //mDialog.dismiss();
+
                             // When the imag1e has successfully uploaded, we get its download URL
                             Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
@@ -164,6 +165,7 @@ public class ProgressActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Toast.makeText(ProgressActivity.this, "Upload Completed.", Toast.LENGTH_SHORT).show();
+                                        mDialog.dismiss();
                                     }
                                 });
                             }

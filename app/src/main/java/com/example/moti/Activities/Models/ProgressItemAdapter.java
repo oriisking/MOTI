@@ -7,7 +7,9 @@ package com.example.moti.Activities.Models;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.moti.R;
 
@@ -35,8 +37,21 @@ public class ProgressItemAdapter extends RecyclerView.Adapter<ProgressItemViewHo
     }
 
     @Override
-    public void onBindViewHolder(ProgressItemViewHolder holder, int position) {
+    public void onBindViewHolder(ProgressItemViewHolder holder, final int position) {
         holder.bind(progress.get(position));
+
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(activity, "Position: "+position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
     }
 
     @Override
