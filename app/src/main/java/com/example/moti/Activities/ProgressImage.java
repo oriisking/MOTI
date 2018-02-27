@@ -97,14 +97,14 @@ public class ProgressImage extends AppCompatActivity {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                //progressImage.setImageDrawable(ad);
-                //Can't load the AnimationDrawable into the ImageView
+
 
                 try {
-                    Toast.makeText(this, ba[1].getHeight() +"  "+ ba[1].getWidth(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, ba[1].getHeight() +"  "+ ba[1].getWidth(), Toast.LENGTH_SHORT).show();
                     gifFromBytes.setLoopCount(30);
                     gifFromBytes.setSpeed(0.1f);
                     progressImageGif.setBackground(gifFromBytes);
+                    gifFromBytes.reset();
                     gifFromBytes.start();
                 } catch (Exception ex) {
                     Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();

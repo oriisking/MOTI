@@ -78,7 +78,7 @@ public class ProgressItemAdapter extends RecyclerView.Adapter<ProgressItemViewHo
         holder.image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(activity, "Calculating Progress...", Toast.LENGTH_SHORT).show();
+
 
                 Bitmap[] ba = new Bitmap[position+1];
                 ProgressItem pi;
