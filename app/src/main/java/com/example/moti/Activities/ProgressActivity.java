@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.CameraProfile;
 import android.net.Uri;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +19,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,6 +44,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,6 +69,8 @@ public class ProgressActivity extends AppCompatActivity {
     private StorageReference storageRef;
 
     private ProgressItemAdapter adapter;
+
+    private Uri mImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,21 +137,67 @@ public class ProgressActivity extends AppCompatActivity {
         Date c = (Date) Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         formattedDate = df.format(c);
-        startActivityForResult(intent, CAMERA_REQUEST_CODE);
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        File photo = null;
+        try
+        {
+            // place where to store camera taken picture
+            photo = this.createTemporaryFile("picture", ".jpg");
+            photo.delete();
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        mImageUri = Uri.fromFile(photo);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        try{
+            startActivityForResult(intent, CAMERA_REQUEST_CODE);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    private File createTemporaryFile(String part, String ext) throws Exception
+    {
+        File tempDir= Environment.getExternalStorageDirectory();
+        tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
+        if(!tempDir.exists())
+        {
+            tempDir.mkdirs();
+        }
+        return File.createTempFile(part, ext, tempDir);
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             mDialog.setMessage("Uploading...");
             mDialog.show();
-            Bitmap b = (Bitmap)data.getExtras().get("data");
-            Uri selectedImageUri = getImageUri(getApplicationContext(), b);
+
+            //android.provider.MediaStore.Images.Media.getBitmap(cr, mImageUri);
+            //Bitmap b = (Bitmap)data.getExtras().get("data");
+            Bitmap b = null;
+            try {
+                b = MediaStore.Images.Media.getBitmap(this.getContentResolver(),mImageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            int width = (int)(dm.widthPixels * 0.8);
+            int height = (int)(dm.heightPixels * 0.6);
+            Bitmap newb = Bitmap.createScaledBitmap(b,width,height,true);
+            Uri selectedImageUri = getImageUri(getApplicationContext(), newb);
 
 
             // Get a reference to the location where we'll store our photos
             storageRef = storage.getReference(auth.getCurrentUser().getUid().toString());
             // Get a reference to store file at chat_photos/<FILENAME>
-            final StorageReference photoRef = storageRef.child(selectedImageUri.getLastPathSegment());
+            final StorageReference photoRef = storageRef.child(mImageUri.getLastPathSegment());
 
             // Upload file to Firebase Storage
 

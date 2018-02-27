@@ -2,11 +2,13 @@ package com.example.moti.Activities.Models;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+
 /**
  * Created by User on 12/02/2018.
  */
 
-public class ProgressItem {
+public class ProgressItem{
 
     private String date;
     private String image;

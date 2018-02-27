@@ -12,5 +12,13 @@
         android:id="@+id/progress_item_activity_image"
         android:scaleType="fitXY"
         />
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_item_activity_image_gif"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        />
 
 </RelativeLayout>
