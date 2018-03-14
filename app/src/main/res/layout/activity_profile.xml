@@ -145,7 +145,6 @@
             android:text="I agree that i've checked the data i have set"
             android:textColor="@color/white"
             android:layout_gravity="center"
-            android:button="@drawable/radio_button"
             android:paddingLeft="5dp"
             android:textSize="13sp" />
 
@@ -161,8 +160,7 @@
             android:paddingRight="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="36dp"
-            android:onClick="profileUpdateButton"
-            />
+            android:onClick="profileUpdateButton"/>
 
     </LinearLayout>
     <ImageButton

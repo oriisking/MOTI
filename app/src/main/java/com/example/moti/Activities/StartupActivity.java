@@ -18,6 +18,7 @@ public class StartupActivity extends AppCompatActivity {
     ImageButton loginButton;
     Intent loginIntent;
     Intent homeIntent;
+    SharedPreferences startupSP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,9 @@ public class StartupActivity extends AppCompatActivity {
 
             });
         }
+
+        startupSP = getSharedPreferences("Startup",MODE_PRIVATE);
+        startupSP.edit().putBoolean("ProfileInitial",true);
 
 
 
