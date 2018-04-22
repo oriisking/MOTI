@@ -3,26 +3,62 @@ package com.example.moti.Activities;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.TimePicker;
 
+import com.example.moti.Activities.Models.ProgressItem;
+import com.example.moti.Activities.Models.ProgressItemAdapter;
 import com.example.moti.R;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    Intent homeIntent;
     Intent loginIntent;
     SharedPreferences profileSP;
+    Intent homeIntent;
+    EditText profileHourPicker;
+    TimePickerDialog tpd;
+    Calendar calendar;
+    int currentHour;
+    int currentMinute;
+
+    AutoCompleteTextView profileName;
+    AutoCompleteTextView profileStartingWeight;
+    AutoCompleteTextView profileGoalWeight;
+    private ProgressDialog mDialog;
+    private String formattedDate;
+    String amPm;
+
+    private FirebaseApp app;
+    private FirebaseDatabase database;
+    private FirebaseAuth auth;
+    private FirebaseStorage storage;
+
+    private DatabaseReference databaseRef;
+    private StorageReference storageRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +66,42 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         homeIntent = new Intent(this, HomeActivity.class);
         loginIntent = new Intent(this, LoginActivity.class);
+        profileHourPicker = (EditText) findViewById(R.id.profileHourPickerField);
+        profileName = (AutoCompleteTextView) findViewById(R.id.profileNameField);
+        profileStartingWeight = (AutoCompleteTextView) findViewById(R.id.profileStartingWeightField);
+        profileGoalWeight = (AutoCompleteTextView) findViewById(R.id.profileGoalWeightField);
+        profileHourPicker.setClickable(false);
+
+        profileHourPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendar = Calendar.getInstance();
+                currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                currentMinute = calendar.get(Calendar.MINUTE);
+                tpd = new TimePickerDialog(ProfileActivity.this, R.style.TimePicker, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
+
+                        profileHourPicker.setText(hourOfDay+":"+minutes);
+                    }
+                },currentHour,currentMinute,true);
+
+                tpd.show();
+            }
+        });
+
+        homeIntent = new Intent(this, HomeActivity.class);
+        mDialog = new ProgressDialog(this);
+
+        // Get the Firebase app and all primitives we'll use
+        app = FirebaseApp.getInstance();
+        database = FirebaseDatabase.getInstance(app);
+        auth = FirebaseAuth.getInstance(app);
+        storage = FirebaseStorage.getInstance(app);
+
+        databaseRef = database.getReference("profile").child(auth.getCurrentUser().getUid().toString());
+        storageRef = FirebaseStorage.getInstance().getReference(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+
 
 
 

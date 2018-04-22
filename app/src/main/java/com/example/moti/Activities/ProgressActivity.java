@@ -112,7 +112,7 @@ public class ProgressActivity extends AppCompatActivity {
 
         databaseRef.addChildEventListener(new ChildEventListener() {
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                // Get the chat message from the snapshot and add it to the UI
+                // Get the Image from the snapshot and add it to the UI
                 ProgressItem pi = snapshot.getValue(ProgressItem.class);
                 adapter.addProgress(pi);
             }
