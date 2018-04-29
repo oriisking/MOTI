@@ -1,6 +1,7 @@
 package com.example.moti.Activities;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,11 +13,14 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 
+import com.example.moti.Activities.Models.ProfileDetails;
 import com.example.moti.Activities.Models.User;
 import com.example.moti.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -152,6 +156,12 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //Sending email verification
                             sendVerificationEmail();
+                            FirebaseApp app = FirebaseApp.getInstance();
+                            FirebaseDatabase database = FirebaseDatabase.getInstance(app);
+                            FirebaseAuth auth = FirebaseAuth.getInstance(app);
+                            DatabaseReference databaseProfileRef = database.getReference("profile").child(auth.getCurrentUser().getUid().toString());
+                            ProfileDetails profileDetails = new ProfileDetails(0,0,"");
+                            databaseProfileRef.setValue(profileDetails);
 
                             //Updating user's display name
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
@@ -161,6 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(RegisterActivity.this, "Completed display name change", Toast.LENGTH_SHORT).show();
                                     }
+
                                 }
 
                             }).addOnFailureListener(new OnFailureListener() {

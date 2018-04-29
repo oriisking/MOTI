@@ -180,8 +180,6 @@ public class ProgressActivity extends AppCompatActivity {
             mDialog.setMessage("Uploading...");
             mDialog.show();
 
-            //android.provider.MediaStore.Images.Media.getBitmap(cr, mImageUri);
-            //Bitmap b = (Bitmap)data.getExtras().get("data");
             Bitmap b = null;
             try {
                 b = MediaStore.Images.Media.getBitmap(this.getContentResolver(),mImageUri);
@@ -196,9 +194,9 @@ public class ProgressActivity extends AppCompatActivity {
             Uri selectedImageUri = getImageUri(getApplicationContext(), newb);
 
 
-            // Get a reference to the location where we'll store our photos
+            // Reference to the storage location
             storageRef = storage.getReference(auth.getCurrentUser().getUid().toString());
-            // Get a reference to store file at chat_photos/<FILENAME>
+            // Get a reference to store file at progress
             final StorageReference photoRef = storageRef.child(mImageUri.getLastPathSegment());
 
             // Upload file to Firebase Storage

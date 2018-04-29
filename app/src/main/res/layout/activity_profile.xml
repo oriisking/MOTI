@@ -117,9 +117,9 @@
             android:focusable="false"
             android:layout_marginBottom="20dp"
             android:paddingLeft="10dp" />
-        <RadioButton
+        <CheckBox
             android:gravity="center"
-            android:id="@+id/radioButton"
+            android:id="@+id/profileCB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="I agree that i've checked the data i have set"
@@ -131,7 +131,7 @@
 
 
         <ImageButton
-            android:id="@+id/signUpButton"
+            android:id="@+id/profileBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/profile_update_button"

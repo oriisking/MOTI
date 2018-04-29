@@ -10,24 +10,36 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.example.moti.Activities.Models.ProfileDetails;
 import com.example.moti.Activities.Models.ProgressItem;
 import com.example.moti.Activities.Models.ProgressItemAdapter;
 import com.example.moti.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -47,17 +59,23 @@ public class ProfileActivity extends AppCompatActivity {
     AutoCompleteTextView profileName;
     AutoCompleteTextView profileStartingWeight;
     AutoCompleteTextView profileGoalWeight;
+    CheckBox profileCB;
     private ProgressDialog mDialog;
+    ImageButton profileBtn;
     private String formattedDate;
     String amPm;
 
     private FirebaseApp app;
     private FirebaseDatabase database;
     private FirebaseAuth auth;
-    private FirebaseStorage storage;
+    private FirebaseUser user;
 
     private DatabaseReference databaseRef;
     private StorageReference storageRef;
+
+    private ProfileDetails pd;
+
+    public static final String TAG = "";
 
 
     @Override
@@ -70,7 +88,14 @@ public class ProfileActivity extends AppCompatActivity {
         profileName = (AutoCompleteTextView) findViewById(R.id.profileNameField);
         profileStartingWeight = (AutoCompleteTextView) findViewById(R.id.profileStartingWeightField);
         profileGoalWeight = (AutoCompleteTextView) findViewById(R.id.profileGoalWeightField);
+        profileCB = (CheckBox) findViewById(R.id.profileCB);
+        profileBtn = (ImageButton)findViewById(R.id.profileBtn);
         profileHourPicker.setClickable(false);
+        // Get the Firebase app and all primitives we'll use
+        app = FirebaseApp.getInstance();
+        database = FirebaseDatabase.getInstance(app);
+        auth = FirebaseAuth.getInstance(app);
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         profileHourPicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,17 +115,82 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+
+        profileBtn.setClickable(false);
+        profileCB.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view)
+            {
+                if (profileCB.isChecked())
+                {
+                    profileBtn.setBackgroundResource(R.drawable.signup_button);
+                    profileBtn.setClickable(true);
+                }
+                else {
+                    profileBtn.setBackgroundResource(R.drawable.signup_gray_button);
+                    profileBtn.setClickable(false);
+                }
+            }
+
+        });
+
+
+
         homeIntent = new Intent(this, HomeActivity.class);
         mDialog = new ProgressDialog(this);
 
-        // Get the Firebase app and all primitives we'll use
-        app = FirebaseApp.getInstance();
-        database = FirebaseDatabase.getInstance(app);
-        auth = FirebaseAuth.getInstance(app);
-        storage = FirebaseStorage.getInstance(app);
+
+
 
         databaseRef = database.getReference("profile").child(auth.getCurrentUser().getUid().toString());
-        storageRef = FirebaseStorage.getInstance().getReference(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        try {
+
+            databaseRef.addValueEventListener(new ValueEventListener() {
+
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            pd = dataSnapshot.getValue(ProfileDetails.class);
+                        }
+                    }
+                    catch(Exception ex){
+                        Log.e("MODEL_ERROR","Error Occurred while mapping to model");
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e(TAG, "onCancelled", databaseError.toException());
+                }
+            });
+
+        }
+        catch (Exception ex)
+        {
+            Toast.makeText(this, ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        if(pd.getGoalWeight() != 0)
+        {
+            profileGoalWeight.setText(pd.getGoalWeight());
+        }
+
+        if(pd.getStartingWeight() != 0)
+        {
+            profileStartingWeight.setText(pd.getStartingWeight());
+        }
+        if(pd.getReminderHour() != "")
+        {
+            profileHourPicker.setText(pd.getReminderHour());
+        }
+
+        profileName.setText(user.getDisplayName());
+
+        //Check if the other 3 fields are empty
 
 
 
@@ -113,8 +203,43 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void profileUpdateButton(View view)
     {
+        final ProfileDetails[] profileDetails = new ProfileDetails[1];
+        ProfileDetails prof = new ProfileDetails();
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                profileDetails[0] = dataSnapshot.getValue(ProfileDetails.class);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+        if(profileDetails[0].getGoalWeight() != 0) {
+            prof.setGoalWeight(Integer.parseInt(profileGoalWeight.getText().toString().trim()));
+        }
+
+        if(profileDetails[0].getStartingWeight() != 0)
+        {
+            prof.setStartingWeight(Integer.parseInt(profileStartingWeight.getText().toString().trim()));
+        }
+        if(profileDetails[0].getReminderHour() != "")
+        {
+            prof.setReminderHour(profileHourPicker.getText().toString());
+        }
+        databaseRef.setValue(prof).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(ProfileActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfileActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //Need to change it to take the hour requested from the profile section.
         /*Calendar calendar = Calendar.getInstance();
