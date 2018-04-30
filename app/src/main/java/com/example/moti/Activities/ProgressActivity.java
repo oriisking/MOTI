@@ -167,9 +167,11 @@ public class ProgressActivity extends AppCompatActivity {
     private File createTemporaryFile(String part, String ext) throws Exception
     {
         File tempDir= Environment.getExternalStorageDirectory();
+        //Solution I found in another question
+        //File tempDir = super.getFilesDir();
         tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
-        if(!tempDir.exists())
-        {
+
+        if(!tempDir.exists()) {
             tempDir.mkdirs();
         }
         return File.createTempFile(part, ext, tempDir);

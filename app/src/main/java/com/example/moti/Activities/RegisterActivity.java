@@ -156,12 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //Sending email verification
                             sendVerificationEmail();
-                            FirebaseApp app = FirebaseApp.getInstance();
-                            FirebaseDatabase database = FirebaseDatabase.getInstance(app);
-                            FirebaseAuth auth = FirebaseAuth.getInstance(app);
-                            DatabaseReference databaseProfileRef = database.getReference("profile").child(auth.getCurrentUser().getUid().toString());
-                            ProfileDetails profileDetails = new ProfileDetails(0,0,"");
-                            databaseProfileRef.setValue(profileDetails);
+
 
                             //Updating user's display name
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
@@ -170,6 +165,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(RegisterActivity.this, "Completed display name change", Toast.LENGTH_SHORT).show();
+
                                     }
 
                                 }
@@ -181,6 +177,12 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             });
 
+                            FirebaseApp app = FirebaseApp.getInstance();
+                            FirebaseDatabase database = FirebaseDatabase.getInstance(app);
+                            FirebaseAuth auth = FirebaseAuth.getInstance(app);
+                            DatabaseReference databaseProfileRef = database.getReference("profile").child(auth.getCurrentUser().getUid().toString());
+                            ProfileDetails profileDetails = new ProfileDetails(0,0,"");
+                            databaseProfileRef.setValue(profileDetails);
                             //Sign out to confirm mail
                             FirebaseAuth.getInstance().signOut();
                             mDialog.dismiss();

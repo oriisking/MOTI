@@ -7,9 +7,10 @@ import java.util.Date;
  */
 
 public class ProfileDetails {
+
     private int startingWeight;
     private int goalWeight;
-    String reminderHour;
+    private String reminderHour;
 
     public ProfileDetails()
     {

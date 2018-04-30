@@ -91,11 +91,18 @@ public class ProfileActivity extends AppCompatActivity {
         profileCB = (CheckBox) findViewById(R.id.profileCB);
         profileBtn = (ImageButton)findViewById(R.id.profileBtn);
         profileHourPicker.setClickable(false);
+        pd = new ProfileDetails(1,1,"2");
+
+
+
         // Get the Firebase app and all primitives we'll use
         app = FirebaseApp.getInstance();
         database = FirebaseDatabase.getInstance(app);
         auth = FirebaseAuth.getInstance(app);
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        user = auth.getCurrentUser();
+
+
+
 
         profileHourPicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,39 +148,25 @@ public class ProfileActivity extends AppCompatActivity {
         mDialog = new ProgressDialog(this);
 
 
+        databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference dbr = databaseRef.child("profile").child(auth.getCurrentUser().getUid().toString().trim());
+        dbr.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                    changeFieldsInit(profileDetails);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ProfileActivity.this, "NOPE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
-        databaseRef = database.getReference("profile").child(auth.getCurrentUser().getUid().toString());
-        try {
-
-            databaseRef.addValueEventListener(new ValueEventListener() {
-
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    try {
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            pd = dataSnapshot.getValue(ProfileDetails.class);
-                        }
-                    }
-                    catch(Exception ex){
-                        Log.e("MODEL_ERROR","Error Occurred while mapping to model");
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e(TAG, "onCancelled", databaseError.toException());
-                }
-            });
-
-        }
-        catch (Exception ex)
-        {
-            Toast.makeText(this, ex.toString(), Toast.LENGTH_SHORT).show();
-        }
-
+    public void changeFieldsInit(ProfileDetails pd)
+    {
         if(pd.getGoalWeight() != 0)
         {
             profileGoalWeight.setText(pd.getGoalWeight());
@@ -189,18 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         profileName.setText(user.getDisplayName());
-
-        //Check if the other 3 fields are empty
-
-
-
-
-
-
-
-
     }
-
     public void profileUpdateButton(View view)
     {
         final ProfileDetails[] profileDetails = new ProfileDetails[1];
