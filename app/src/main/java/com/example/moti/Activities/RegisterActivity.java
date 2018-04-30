@@ -177,10 +177,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             });
 
-                            FirebaseApp app = FirebaseApp.getInstance();
-                            FirebaseDatabase database = FirebaseDatabase.getInstance(app);
-                            FirebaseAuth auth = FirebaseAuth.getInstance(app);
-                            DatabaseReference databaseProfileRef = database.getReference("profile").child(auth.getCurrentUser().getUid().toString());
+                            FirebaseApp app2 = FirebaseApp.getInstance();
+                            FirebaseDatabase database2 = FirebaseDatabase.getInstance(app2);
+                            FirebaseAuth auth2 = FirebaseAuth.getInstance(app2);
+                            DatabaseReference databaseProfileRef = database2.getReference("profile").child(auth2.getCurrentUser().getUid().toString());
                             ProfileDetails profileDetails = new ProfileDetails(0,0,"");
                             databaseProfileRef.setValue(profileDetails);
                             //Sign out to confirm mail

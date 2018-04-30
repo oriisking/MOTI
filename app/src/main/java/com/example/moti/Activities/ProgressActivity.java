@@ -79,19 +79,21 @@ public class ProgressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress);
 
+        //Permission to the camera
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
         {
             ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         }
 
+        //Variables initialize
         homeIntent = new Intent(this, HomeActivity.class);
         progressList = (RecyclerView) findViewById(R.id.progress_recyclerview);
         mDialog = new ProgressDialog(this);
 
+        //The main RecyclerView initialize
         GridLayoutManager glm = new GridLayoutManager(this, 3);
         progressList.setHasFixedSize(false);
         progressList.setLayoutManager(glm);
-
         adapter = new ProgressItemAdapter(this);
         progressList.setAdapter(adapter);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -106,10 +108,11 @@ public class ProgressActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance(app);
         storage = FirebaseStorage.getInstance(app);
 
+        //References to the location in the database and the storage
         databaseRef = database.getReference("progress").child(auth.getCurrentUser().getUid().toString());
         storageRef = FirebaseStorage.getInstance().getReference(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
 
-
+        //Whenever a change is called into the database, add it to the RecycleView
         databaseRef.addChildEventListener(new ChildEventListener() {
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 // Get the Image from the snapshot and add it to the UI

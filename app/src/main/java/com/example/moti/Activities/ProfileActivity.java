@@ -93,8 +93,6 @@ public class ProfileActivity extends AppCompatActivity {
         profileHourPicker.setClickable(false);
         pd = new ProfileDetails(1,1,"2");
 
-
-
         // Get the Firebase app and all primitives we'll use
         app = FirebaseApp.getInstance();
         database = FirebaseDatabase.getInstance(app);
@@ -123,24 +121,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        profileBtn.setClickable(false);
-        profileCB.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view)
-            {
-                if (profileCB.isChecked())
-                {
-                    profileBtn.setBackgroundResource(R.drawable.signup_button);
-                    profileBtn.setClickable(true);
-                }
-                else {
-                    profileBtn.setBackgroundResource(R.drawable.signup_gray_button);
-                    profileBtn.setClickable(false);
-                }
-            }
-
-        });
 
 
 
@@ -150,11 +130,77 @@ public class ProfileActivity extends AppCompatActivity {
 
         databaseRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference dbr = databaseRef.child("profile").child(auth.getCurrentUser().getUid().toString().trim());
-        dbr.addValueEventListener(new ValueEventListener() {
+        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
-                    changeFieldsInit(profileDetails);
+                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                changeFieldsInit(profileDetails);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ProfileActivity.this, "NOPE", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    public void changeFieldsInit(ProfileDetails pd){
+        try {
+            if (pd.getGoalWeight() != 0) {
+                profileGoalWeight.setText(Integer.toString(pd.getGoalWeight()));
+            }
+
+            if (pd.getStartingWeight() != 0) {
+                profileStartingWeight.setText(Integer.toString(pd.getStartingWeight()));
+            }
+            if (pd.getReminderHour().trim() != "") {
+                profileHourPicker.setText(pd.getReminderHour());
+            }
+
+            profileName.setText(user.getDisplayName());
+        }
+        catch(Exception ex)
+        {
+            Toast.makeText(this, ex.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void saveDataFromDetails(ProfileDetails profileDetails){
+        ProfileDetails prof = new ProfileDetails();
+        if(Integer.parseInt(profileGoalWeight.getText().toString().trim()) != 0) {
+            prof.setGoalWeight(Integer.parseInt(profileGoalWeight.getText().toString().trim()));
+        }
+
+        if(Integer.parseInt(profileStartingWeight.getText().toString().trim()) != 0)
+        {
+            prof.setStartingWeight(Integer.parseInt(profileStartingWeight.getText().toString().trim()));
+        }
+        if(profileHourPicker.getText().toString() != "")
+        {
+            prof.setReminderHour(profileHourPicker.getText().toString());
+        }
+        databaseRef = databaseRef.child("profile").child(auth.getCurrentUser().getUid().trim());
+        databaseRef.setValue(prof).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(ProfileActivity.this, "Your details have been uploaded succesfully!", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfileActivity.this, "Failed uploading, please check your details.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void profileUpdateButton(View view){
+        ProfileDetails prof = new ProfileDetails();
+        DatabaseReference dbr = databaseRef.child("profile").child(auth.getCurrentUser().getUid().toString().trim());
+        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
+                saveDataFromDetails(profileDetails);
             }
 
             @Override
@@ -163,99 +209,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    public void changeFieldsInit(ProfileDetails pd)
-    {
-        if(pd.getGoalWeight() != 0)
-        {
-            profileGoalWeight.setText(pd.getGoalWeight());
-        }
-
-        if(pd.getStartingWeight() != 0)
-        {
-            profileStartingWeight.setText(pd.getStartingWeight());
-        }
-        if(pd.getReminderHour() != "")
-        {
-            profileHourPicker.setText(pd.getReminderHour());
-        }
-
-        profileName.setText(user.getDisplayName());
-    }
-    public void profileUpdateButton(View view)
-    {
-        final ProfileDetails[] profileDetails = new ProfileDetails[1];
-        ProfileDetails prof = new ProfileDetails();
-        databaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                profileDetails[0] = dataSnapshot.getValue(ProfileDetails.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        if(profileDetails[0].getGoalWeight() != 0) {
-            prof.setGoalWeight(Integer.parseInt(profileGoalWeight.getText().toString().trim()));
-        }
-
-        if(profileDetails[0].getStartingWeight() != 0)
-        {
-            prof.setStartingWeight(Integer.parseInt(profileStartingWeight.getText().toString().trim()));
-        }
-        if(profileDetails[0].getReminderHour() != "")
-        {
-            prof.setReminderHour(profileHourPicker.getText().toString());
-        }
-        databaseRef.setValue(prof).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(ProfileActivity.this, "Success", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ProfileActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //Need to change it to take the hour requested from the profile section.
-        /*Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,13);
-        calendar.set(Calendar.MINUTE,05);
-
-        Intent notIntent = new Intent(getApplicationContext(),Notification_reciever.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),100,notIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
-        */
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Intent repeating_intent = new Intent(this,ProgressActivity.class);
-        repeating_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,100,repeating_intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setContentIntent(pendingIntent)
-                .setSmallIcon(android.R.drawable.arrow_up_float)
-                .setContentTitle("Update Your Progress!")
-                .setContentText("Don't forget to upload your daily progress pictures!")
-                .setColor(16747520)
-                .setAutoCancel(true);
-        notificationManager.notify(100,builder.build());
-
-       // profileSP = getSharedPreferences("Startup",MODE_PRIVATE);
-        //profileSP.edit().putBoolean("ProfileInitial",false);
-    }
-
     public void profileBackButton(View view) {
         startActivity(homeIntent);
     }
-
     public void profileLogoutButton(View view) {
 
        /* loginSP =getSharedPreferences("Login", MODE_PRIVATE);
