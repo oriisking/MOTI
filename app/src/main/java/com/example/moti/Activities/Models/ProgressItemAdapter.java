@@ -36,13 +36,13 @@ import com.example.moti.Activities.ProgressImage;
 
 public class ProgressItemAdapter extends RecyclerView.Adapter<ProgressItemViewHolder> {
     public static final String IMAGE_PREF = "ImagePreference";
-    private static final String TAG = "ChatMessageAdapter";
+    private static final String TAG = "ImageAdapter";
     private final Activity activity;
     private final int CLICK = 0;
     private final int LONG_CLICK = 1;
     private ProgressDialog pd;
 
-    List<ProgressItem> progress = new ArrayList<>();
+    private List<ProgressItem> progress = new ArrayList<>();
 
     public ProgressItemAdapter(Activity activity) {
         this.activity = activity;

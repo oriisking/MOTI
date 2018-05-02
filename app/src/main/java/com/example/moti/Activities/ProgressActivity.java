@@ -22,6 +22,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -167,15 +168,23 @@ public class ProgressActivity extends AppCompatActivity {
         }
 
     }
-    private File createTemporaryFile(String part, String ext) throws Exception
-    {
-        File tempDir= Environment.getExternalStorageDirectory();
+    private File createTemporaryFile(String part, String ext) throws Exception{
+        //File tempDir= Environment.getExternalStorageDirectory();
         //Solution I found in another question
-        //File tempDir = super.getFilesDir();
+        File tempDir = super.getFilesDir();
         tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
 
         if(!tempDir.exists()) {
-            tempDir.mkdirs();
+            try{
+
+               tempDir.mkdirs();
+
+            }
+            catch(Exception ex)
+            {
+                Log.d("TAG",ex.toString());
+                Toast.makeText(this, ex.getMessage().toString(), Toast.LENGTH_SHORT).show();
+            }
         }
         return File.createTempFile(part, ext, tempDir);
     }

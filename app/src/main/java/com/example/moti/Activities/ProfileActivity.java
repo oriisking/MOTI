@@ -167,6 +167,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
     public void saveDataFromDetails(ProfileDetails profileDetails){
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("profile").child(auth.getCurrentUser().getUid().trim());
         ProfileDetails prof = new ProfileDetails();
         if(Integer.parseInt(profileGoalWeight.getText().toString().trim()) != 0) {
             prof.setGoalWeight(Integer.parseInt(profileGoalWeight.getText().toString().trim()));
@@ -176,12 +177,10 @@ public class ProfileActivity extends AppCompatActivity {
         {
             prof.setStartingWeight(Integer.parseInt(profileStartingWeight.getText().toString().trim()));
         }
-        if(profileHourPicker.getText().toString() != "")
-        {
+        if(profileHourPicker.getText().toString() != "") {
             prof.setReminderHour(profileHourPicker.getText().toString());
         }
-        databaseRef = databaseRef.child("profile").child(auth.getCurrentUser().getUid().trim());
-        databaseRef.setValue(prof).addOnSuccessListener(new OnSuccessListener<Void>() {
+        dr.setValue(prof).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(ProfileActivity.this, "Your details have been uploaded succesfully!", Toast.LENGTH_SHORT).show();
