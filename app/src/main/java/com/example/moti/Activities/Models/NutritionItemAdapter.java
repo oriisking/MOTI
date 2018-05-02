@@ -23,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.moti.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.ArrayList;
@@ -47,6 +50,12 @@ public class NutritionItemAdapter extends RecyclerView.Adapter<NutritionItemView
 
     }
 
+    public void resetNutrition()
+    {
+        nutrition.clear();
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public NutritionItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -56,19 +65,17 @@ public class NutritionItemAdapter extends RecyclerView.Adapter<NutritionItemView
     @Override
     public void onBindViewHolder(final NutritionItemViewHolder holder, final int position) {
         holder.bind(nutrition.get(position));
+        holder.btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteNutritionForADay();
+            }
+        });
         holder.calories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(holder.btn.getVisibility() == View.VISIBLE)
                 {
-                    holder.btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //Delete item here
-                            Toast.makeText(activity, "Deleted", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
                     holder.btn.setVisibility(View.INVISIBLE);
                     holder.btn.setClickable(false);
                 }
@@ -82,6 +89,12 @@ public class NutritionItemAdapter extends RecyclerView.Adapter<NutritionItemView
 
     }
 
+    public void deleteNutritionForADay()
+    {
+        Toast.makeText(activity, "Deleted", Toast.LENGTH_SHORT).show();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("nutrition").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseReference.removeValue();
+    }
     @Override
     public int getItemCount() {
         return nutrition.size();

@@ -53,6 +53,7 @@
             android:background="@android:drawable/ic_delete"
             android:id="@+id/nutrition_item_delete_button"
             android:visibility="invisible"
+            android:clickable="false"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 

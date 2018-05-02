@@ -79,12 +79,14 @@ public class NutritionActivity extends AppCompatActivity {
 
             }
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                adapter.resetNutrition();
+                calculateAndUpdateSum();
             }
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
             public void onCancelled(DatabaseError databaseError) {
+                adapter.notifyDataSetChanged();
 
             }
         });

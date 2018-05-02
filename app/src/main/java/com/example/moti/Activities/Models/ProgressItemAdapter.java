@@ -56,6 +56,7 @@ public class ProgressItemAdapter extends RecyclerView.Adapter<ProgressItemViewHo
     }
 
 
+
     @Override
     public ProgressItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ProgressItemViewHolder(activity, activity.getLayoutInflater().inflate(R.layout.progress_item, parent, false));
