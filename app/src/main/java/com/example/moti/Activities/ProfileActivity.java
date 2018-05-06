@@ -199,7 +199,10 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfileDetails profileDetails = dataSnapshot.getValue(ProfileDetails.class);
-                saveDataFromDetails(profileDetails);
+                if(profileCB.isChecked())
+                    saveDataFromDetails(profileDetails);
+                else
+                    Toast.makeText(ProfileActivity.this, "Please read the terms of use and agree with them.", Toast.LENGTH_SHORT).show();
             }
 
             @Override

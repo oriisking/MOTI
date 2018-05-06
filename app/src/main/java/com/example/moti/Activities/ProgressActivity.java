@@ -80,10 +80,10 @@ public class ProgressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress);
 
-        //Permission to the camera
+        //Permission to the camera and files
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
         {
-            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA,android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, CAMERA_REQUEST_CODE);
         }
 
         //Variables initialize
@@ -169,9 +169,7 @@ public class ProgressActivity extends AppCompatActivity {
 
     }
     private File createTemporaryFile(String part, String ext) throws Exception{
-        //File tempDir= Environment.getExternalStorageDirectory();
-        //Solution I found in another question
-        File tempDir = super.getFilesDir();
+        File tempDir= Environment.getExternalStorageDirectory();
         tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
 
         if(!tempDir.exists()) {
@@ -190,7 +188,7 @@ public class ProgressActivity extends AppCompatActivity {
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == CAMERA_REQUEST_CODE ) {
             mDialog.setMessage("Uploading...");
             mDialog.show();
 
