@@ -32,6 +32,7 @@
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.ProgressImage" android:theme="@style/AppTheme.PopUpImage"></activity>
         <receiver android:name=".Activities.Notification_reciever"/>
+        <receiver android:name=".Activities.MidNightReceiver"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

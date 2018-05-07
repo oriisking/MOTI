@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class MyReceiver extends BroadcastReceiver {
+public class MidNightReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 /*Intent service1 = new Intent(context, MyAlarmService.class);
         context.startService(service1);*/
         Log.i("App", "called receiver method");
         try{
-            Utils.generateNotification(context,11121);
+            Utils.generateNotification(context,11222);
         }catch(Exception e){
             e.printStackTrace();
         }

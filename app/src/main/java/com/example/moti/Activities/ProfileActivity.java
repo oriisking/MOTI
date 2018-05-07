@@ -96,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
         pd = new ProfileDetails(1,1,"2");
 
         // Get the Firebase app and all primitives we'll use
+
         app = FirebaseApp.getInstance();
         database = FirebaseDatabase.getInstance(app);
         auth = FirebaseAuth.getInstance(app);
