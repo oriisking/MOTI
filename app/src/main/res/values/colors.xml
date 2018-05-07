@@ -3,7 +3,14 @@
     <color name="colorPrimary">#FFAA00</color>
     <color name="colorPrimaryDark">#1a1a1a</color>
     <color name="colorAccent">#ffffff</color>
+
     <color name="white">#ffffff</color>
     <color name="secondOrange">#FFAA00</color>
     <color name="darkGray">#242424</color>
+    <color name="black">#000000</color>
+    <color name="red">#FF0000</color>
+    <color name="gray">#DCDCDC</color>
+    <color name="overlay">#BB1a1a1a</color>
+
+    <color name="index_text_color">#8a8a8a</color>
 </resources>
