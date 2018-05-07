@@ -17,4 +17,7 @@ public interface AppConst {
     String EXERCISE_NAME = "exercise_name";
     String EXERCISE_WEIGHT = "exercise_weight";
     String EXERCISE_REPEATS = "exercise_repeats";
+
+    int FLAG_SAVE = 0;
+    int FLAG_EDIT = 1;
 }

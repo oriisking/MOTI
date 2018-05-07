@@ -28,6 +28,14 @@ public class WorkoutItem implements Parcelable{
         this.exerciseRepeats = exerciseRepeats;
     }
 
+    public WorkoutItem(String exerciseDay, String exerciseName, int exerciseWeight, int exerciseRepeats) {
+        this.exerciseDay = exerciseDay;
+        this.exerciseName = exerciseName;
+        this.exerciseWeight = exerciseWeight;
+        this.exerciseRepeats = exerciseRepeats;
+    }
+
+
     protected WorkoutItem(Parcel in) {
         id = in.readInt();
         exerciseDay = in.readString();

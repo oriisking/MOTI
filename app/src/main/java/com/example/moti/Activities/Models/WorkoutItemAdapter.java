@@ -8,26 +8,36 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moti.R;
-import com.example.moti.util.lib.stickyindex.TextGetter;
-import com.pkmmte.view.CircularImageView;
+import com.example.moti.listener.OnWorkoutClickListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
-public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements TextGetter, Filterable {
+public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     private Context context;
     private List<WorkoutItem> dataSet;
     private List<WorkoutItem> mFilteredList;
 
+    private OnWorkoutClickListener mListener;
+
     public WorkoutItemAdapter(List<WorkoutItem> workoutItems, Context c) {
         this.dataSet = workoutItems;
         this.context = c;
         this.mFilteredList = workoutItems;
+
+        shortDataByDay(mFilteredList);
+        shortDataByFBW(mFilteredList);
+    }
+
+    public void setListener(OnWorkoutClickListener listener){
+        mListener = listener;
     }
 
     @Override
@@ -48,13 +58,6 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         workoutItemViewHolder.txtDay.setText(workoutItem.getExerciseDay());
         workoutItemViewHolder.txtWeight.setText(String.valueOf(workoutItem.getExerciseWeight()));
         workoutItemViewHolder.txtRepeats.setText(String.valueOf(workoutItem.getExerciseRepeats()));
-
-        //setRegularLineLayout(workoutItemViewHolder);
-    }
-
-    private void setRegularLineLayout(WorkoutItemViewHolder vh) {
-//        vh.txtDay.setTextColor(Color.parseColor("#ffffff"));
-//        vh.txtDay.setTextSize(26);
     }
 
     @Override
@@ -77,18 +80,22 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return null;
     }
 
+    public void addData(WorkoutItem workoutItem){
+        mFilteredList.add(workoutItem);
+        shortDataByDay(mFilteredList);
+        shortDataByFBW(mFilteredList);
+        notifyDataSetChanged();
+    }
+
     public List<WorkoutItem> getDataSet() {
         return mFilteredList;
     }
 
     public void setDataSet(List<WorkoutItem> workoutItems) {
         mFilteredList = workoutItems;
+        shortDataByDay(mFilteredList);
+        shortDataByFBW(mFilteredList);
         notifyDataSetChanged();
-    }
-
-    @Override
-    public String getTextFromAdapter(int pos) {
-        return String.valueOf(mFilteredList.get(pos).getExerciseDay().charAt(0)).toUpperCase();
     }
 
     @Override
@@ -145,9 +152,37 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyItemInserted(position);
     }
 
+    //first short the data by ascending ordered alphabets
+    public void shortDataByDay(List<WorkoutItem> workoutItems){
+        Collections.sort(workoutItems, new Comparator<WorkoutItem>(){
+            public int compare(WorkoutItem obj1, WorkoutItem obj2) {
+                return obj1.getExerciseDay()
+                        .toUpperCase()
+                        .compareTo(obj2.getExerciseDay().toUpperCase());
+            }
+        });
+    }
+
+    //2nd shorting for bringing the 'FBW' in the start
+    public void shortDataByFBW(List<WorkoutItem> workoutItems){
+        Collections.sort(workoutItems, new Comparator<WorkoutItem>(){
+            public int compare(WorkoutItem obj1, WorkoutItem obj2) {
+                //get the compare value
+                int comp = obj1.getExerciseDay().compareToIgnoreCase("FBW");
+                //0 means it contains "FBW" so bring it to front
+                //-1 means obj1 is smaller so it will go to front
+                if (comp == 0) return -1;
+
+                //if not then send it to rear
+                //1 means obj1 is greater so it will go to rears
+                return 1;
+            }
+        });
+    }
+
     public class WorkoutItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView txtDay, txtName, txtWeight, txtRepeats;
-        ImageButton btnEdit, btnDelete;
+        ImageView btnEdit, btnDelete;
 
         public WorkoutItemViewHolder(View v) {
             super (v);
@@ -155,8 +190,8 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             txtName = (TextView) v.findViewById(R.id.txt_ex_name);
             txtWeight = (TextView) v.findViewById(R.id.txt_ex_weight);
             txtRepeats = (TextView) v.findViewById(R.id.txt_ex_repeats);
-            btnEdit = (ImageButton) v.findViewById(R.id.btn_edit);
-            btnDelete = (ImageButton) v.findViewById(R.id.btn_delete);
+            btnEdit = (ImageView) v.findViewById(R.id.btn_edit);
+            btnDelete = (ImageView) v.findViewById(R.id.btn_delete);
 
             btnEdit.setOnClickListener(this);
             btnDelete.setOnClickListener(this);
@@ -164,14 +199,7 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Override
         public void onClick(View v) {
-            WorkoutItem workoutItem = dataSet.get(getAdapterPosition());
-            switch (v.getId()){
-                case R.id.btn_edit:
-                    break;
-
-                case R.id.btn_delete:
-                    break;
-            }
+            if(mListener != null) mListener.onItemClick(v, dataSet.get(getAdapterPosition()));
         }
     }
 }

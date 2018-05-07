@@ -68,11 +68,11 @@
         android:layout_alignParentStart="true"
         android:onClick="workoutBackButton"/>
 
-    <ImageButton
-        android:id="@+id/workoutAddButton"
+    <ImageView
+        android:id="@+id/btn_add_workout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/plus_button"
+        android:src="@drawable/plus_button"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
