@@ -74,6 +74,8 @@ public class ProfileActivity extends AppCompatActivity {
     private StorageReference storageRef;
 
     private ProfileDetails pd;
+    public String selected_time="00:00";
+    private PendingIntent pendingIntent;
 
     public static final String TAG = "";
 
@@ -111,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
                 tpd = new TimePickerDialog(ProfileActivity.this, R.style.TimePicker, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
-
+                        selected_time=hourOfDay+":"+minutes;
                         profileHourPicker.setText(hourOfDay+":"+minutes);
                     }
                 },currentHour,currentMinute,true);
@@ -166,6 +168,29 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void setNotification() {
+        Calendar calendar = Calendar.getInstance();
+
+        int hour= 00;
+        if(selected_time.length()>0 && selected_time.contains(":")){ hour=Integer.parseInt(selected_time.split(":")[0]);}
+        int minutes= 00;
+        if(selected_time.length()>0 && selected_time.contains(":")){ minutes=Integer.parseInt(selected_time.split(":")[1]) + 1;}
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minutes);
+        calendar.set(Calendar.SECOND, 0);
+
+
+        Intent myIntent = new Intent(ProfileActivity.this, MyReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(ProfileActivity.this, 0, myIntent,0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis()+1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+                1000 * 60 * 60 * 24, pendingIntent);
+    }
+
+
     public void saveDataFromDetails(ProfileDetails profileDetails){
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("profile").child(auth.getCurrentUser().getUid().trim());
         ProfileDetails prof = new ProfileDetails();
@@ -183,6 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
         dr.setValue(prof).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                setNotification();
                 Toast.makeText(ProfileActivity.this, "Your details have been uploaded succesfully!", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {

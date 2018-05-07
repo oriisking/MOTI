@@ -20,6 +20,7 @@
         <activity android:name=".Activities.ProgressActivity" />
         <activity android:name=".Activities.WorkoutActivity" />
         <activity android:name=".Activities.ProfileActivity" />
+        <receiver android:name=".Activities.MyReceiver"/>
         <activity android:name=".Activities.StartupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +32,7 @@
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.ProgressImage" android:theme="@style/AppTheme.PopUpImage"></activity>
         <receiver android:name=".Activities.Notification_reciever"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
