@@ -12,6 +12,7 @@ public class MidNightReceiver extends BroadcastReceiver {
         context.startService(service1);*/
         Log.i("App", "called receiver method");
         try{
+            //
             Utils.generateNotification(context,11222);
         }catch(Exception e){
             e.printStackTrace();
