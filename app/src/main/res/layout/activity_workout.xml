@@ -52,7 +52,188 @@
 
         </RelativeLayout>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="58dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="A:"
+                        android:textSize="33sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="12dp"
+                        android:layout_gravity="left"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="B:"
+                        android:textSize="33sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="12dp"
+                        android:layout_gravity="left"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="C:"
+                        android:textSize="33sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="12dp"
+                        android:layout_gravity="left"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bench Press  -  3X8  - 60KG"
+                        android:textSize="19sp"
+                        android:textColor="#242424"
+                        android:layout_marginBottom="9dp"
+                        android:layout_gravity="center"
+                        />
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
     <ImageButton
