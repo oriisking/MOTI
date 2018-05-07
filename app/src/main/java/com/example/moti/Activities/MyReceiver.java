@@ -12,7 +12,7 @@ public class MyReceiver extends BroadcastReceiver {
         context.startService(service1);*/
         Log.i("App", "called receiver method");
         try{
-            Utils.generateNotification(context);
+            Utils.generateNotification(context,11121);
         }catch(Exception e){
             e.printStackTrace();
         }

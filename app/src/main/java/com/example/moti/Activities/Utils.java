@@ -16,15 +16,29 @@ public class Utils {
 
 
     @SuppressWarnings("static-access")
-    public static void generateNotification(Context context) {
+    public static void generateNotification(Context context,int notification_id) {
 
+        //custom notification
         android.support.v7.app.NotificationCompat.Builder nb = new android.support.v7.app.NotificationCompat.Builder(context);
-        nb.setSmallIcon(R.mipmap.ic_launcher);
-        nb.setContentTitle("Have you captured your progress today?");
-        nb.setContentText("Don't forget to upload today's progress, click now!");
-        nb.setTicker("Take a look");
+        if(notification_id == 11121)
+        {
+            nb.setSmallIcon(R.mipmap.ic_launcher);
+            nb.setContentTitle("Have you captured your progress today?");
+            nb.setContentText("Don't forget to upload today's progress, click now!");
+            nb.setTicker("Take a look");
+            nb.setAutoCancel(true);
+        }
+        //midnight notification
+        else if(notification_id == 11222)
+        {
+            nb.setSmallIcon(R.mipmap.ic_launcher);
+            nb.setContentTitle("Finished eating?");
+            nb.setContentText("Don't forget to clean your log, click now!");
+            nb.setTicker("Take a look");
+            //Where do I tell the notification to redirect the user to another activity?
+            nb.setAutoCancel(true);
+        }
 
-        nb.setAutoCancel(true);
 
 
         //get the bitmap to show in notification bar
@@ -35,6 +49,11 @@ public class Utils {
 
 
         Intent resultIntent = new Intent(context, ProgressActivity.class);
+        //Thanks, you really helped me <3
+        //Would'nt let you work without some payment, you're dismissed now xD
+        if(notification_id == 11222){
+            resultIntent = new Intent(context,NutritionActivity.class);
+        }
         TaskStackBuilder TSB = TaskStackBuilder.create(context);
         TSB.addParentStack(ProgressActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
@@ -53,7 +72,7 @@ public class Utils {
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(11221, nb.build());
+        notificationManager.notify(notification_id, nb.build());
 
     }
 }
