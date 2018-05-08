@@ -16,8 +16,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.home.HomeActivity"></activity>
-        <activity android:name=".ui.nutrition.NutritionActivity" />
-        <activity android:name=".ui.progress.ProgressActivity" />
+        <activity android:name=".ui.nutrition.NutritionActivity"
+            android:parentActivityName=".ui.home.HomeActivity" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.home.HomeActivity" />
+        </activity>
+        <activity android:name=".ui.progress.ProgressActivity"
+            android:parentActivityName=".ui.home.HomeActivity" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.home.HomeActivity" />
+        </activity>
         <activity android:name=".ui.workout.WorkoutActivity"
             android:parentActivityName=".ui.home.HomeActivity" >
 
@@ -25,7 +37,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.home.HomeActivity" />
         </activity>
-        <activity android:name=".ui.profile.ProfileActivity" />
+        <activity android:name=".ui.profile.ProfileActivity"
+            android:parentActivityName=".ui.home.HomeActivity" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.home.HomeActivity" />
+        </activity>
         <receiver android:name="com.example.util.receiver.MyReceiver"/>
         <activity android:name=".ui.splash.StartupActivity">
             <intent-filter>

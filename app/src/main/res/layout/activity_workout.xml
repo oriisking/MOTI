@@ -1,91 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorAccent"
+    android:orientation="vertical"
     tools:context="com.example.moti.ui.workout.WorkoutActivity">
-    <ImageView
+
+    <include
+        android:id="@+id/my_toolbar"
+        layout="@layout/toolbar" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/general_white_bg"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@+id/relativeLayout">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/my_toolbar"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:background="@drawable/general_top_bar"
-            android:id="@+id/relativeLayout">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/workout"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_height="wrap_content"
-                    android:text="WORKOUT"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="31dp"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/gray"
-            android:layout_below="@+id/relativeLayout">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </RelativeLayout>
-    </LinearLayout>
-    <ImageButton
-        android:id="@+id/workoutBackButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/general_back_button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="workoutBackButton"
-        android:visibility="gone"/>
-
-    <ImageView
-        android:id="@+id/btn_add_workout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/plus_button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
-</RelativeLayout>
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+</LinearLayout>

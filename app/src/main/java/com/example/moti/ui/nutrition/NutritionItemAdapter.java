@@ -29,8 +29,6 @@ public class NutritionItemAdapter extends RecyclerView.Adapter<NutritionItemView
 
     public NutritionItemAdapter(Activity activity) {
         this.activity = activity;
-
-
     }
 
     public void addNutrition(NutritionItem pi) {
@@ -74,8 +72,6 @@ public class NutritionItemAdapter extends RecyclerView.Adapter<NutritionItemView
                 }
             }
         });
-
-
     }
 
     public void deleteNutritionForADay()

@@ -2,8 +2,10 @@ package com.example.moti.ui.home;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,6 +29,10 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle("WELCOME, Bla");
+        myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        setSupportActionBar(myToolbar);
 
         //Inits
         workoutIntent = new Intent(this, WorkoutActivity.class);
@@ -34,9 +40,8 @@ public class HomeActivity extends AppCompatActivity {
         nutritionIntent = new Intent(this, NutritionActivity.class);
         profileIntent = new Intent(this, ProfileActivity.class);
         loginSP = getSharedPreferences("Login", MODE_PRIVATE);
-        homeTop = (TextView)findViewById(R.id.homeTopText);
         String userName = loginSP.getString("Name", "");
-        homeTop.setText("WELCOME, " + FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        setTitle("WELCOME, " + FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
     }
 
     public void workoutButton(View view) {

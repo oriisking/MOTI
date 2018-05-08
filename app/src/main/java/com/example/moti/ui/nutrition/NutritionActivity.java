@@ -1,11 +1,13 @@
 package com.example.moti.ui.nutrition;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +32,6 @@ import java.util.List;
 
 public class NutritionActivity extends AppCompatActivity {
 
-    Intent homeIntent;
     RecyclerView nutrition_recyclerview;
     NutritionItemAdapter adapter;
     List<NutritionItem> data;
@@ -50,7 +51,12 @@ public class NutritionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nutrition);
-        homeIntent = new Intent(this, HomeActivity.class);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle("NUTRITION");
+        myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         totalCalorieTextView = (TextView)findViewById(R.id.nutritionCalorieSum);
         nutrition_recyclerview = (RecyclerView) findViewById(R.id.nutrition_recyclerview);
         RecyclerView.LayoutManager LM = new LinearLayoutManager(getApplicationContext());
@@ -58,8 +64,6 @@ public class NutritionActivity extends AppCompatActivity {
         nutrition_recyclerview.setHasFixedSize(false);
         adapter = new NutritionItemAdapter(this);
         nutrition_recyclerview.setAdapter(adapter);
-
-
 
         database = FirebaseDatabase.getInstance();
         databaseRef = database.getReference("nutrition").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
@@ -87,16 +91,8 @@ public class NutritionActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
 
-
-
-    public void nutritionBackButton(View view) {
-        startActivity(homeIntent);
-    }
 
     public void nutritionAddButton(View view) {
 
