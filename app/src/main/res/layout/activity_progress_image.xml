@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.moti.Activities.ProgressImage">
+    tools:context="com.example.moti.ui.progress.ProgressImage">
 
     <ImageView
         android:layout_width="wrap_content"
