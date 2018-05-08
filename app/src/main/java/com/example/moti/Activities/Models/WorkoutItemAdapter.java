@@ -1,5 +1,9 @@
 package com.example.moti.Activities.Models;
 
+/**
+ * Created by User on 13/02/2018.
+ */
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -135,6 +139,18 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 notifyDataSetChanged();
             }
         };
+    }
+    public void removeItemByID(int id)
+    {
+        int position=0;
+        WorkoutItem wi;
+        for (int i = 0; i< mFilteredList.size(); i++)
+        {
+            wi = mFilteredList.get(i);
+            if(wi.getId() == id)
+                position = i;
+        }
+        removeItem(position);
     }
 
     public void removeItem(int position) {

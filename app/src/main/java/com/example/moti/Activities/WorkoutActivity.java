@@ -1,12 +1,19 @@
 package com.example.moti.Activities;
 
+/**
+ * Created by User on 13/02/2018.
+ */
+
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.moti.Activities.Models.NutritionItem;
 import com.example.moti.Activities.Models.WorkoutItem;
 import com.example.moti.Activities.Models.WorkoutItemAdapter;
 import com.example.moti.R;
@@ -23,6 +31,13 @@ import com.example.moti.data.AppConst;
 import com.example.moti.listener.OnWorkoutClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,8 +52,11 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
 
     private List<WorkoutItem> workoutItems;
     private WorkoutItemAdapter mAdapter;
+    private List<WorkoutItem> workout  = new ArrayList<>();;
 
     private int flag;
+    private ProgressDialog pd;
+    private int lastID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +66,6 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
 
         initView();
 
-        loadData();
     }
 
     @Override
@@ -89,19 +106,59 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseRef = database.getReference("workout").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        databaseRef.addChildEventListener(new ChildEventListener() {
 
-        workoutItems = new ArrayList<>();
-        for (int i = 1; i<=20; i++){
-            String nm = "FBW";
-            if(i>6) nm = "A ";
-            if(i>10) nm = "B ";
-            if(i>15) nm = "c ";
-            workoutItems.add(new WorkoutItem(i, nm, "Exercise " + i, i, i));
-        }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                WorkoutItem wi = dataSnapshot.getValue(WorkoutItem.class);
+                workout.add(wi);
+                mAdapter.setDataSet(workout);
 
-        mAdapter = new WorkoutItemAdapter (workoutItems, this);
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+
+        databaseRef = database.getReference("workout").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        Query lastQuery = databaseRef.orderByKey().limitToLast(1);
+        //check if its empty
+        lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getChildrenCount() == 0)
+                    lastID = 0;
+                else {
+                    for(DataSnapshot ds : dataSnapshot.getChildren())
+                    {
+                        lastID = ds.getValue(WorkoutItem.class).getId()+1;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        mAdapter = new WorkoutItemAdapter (workout, this);
         mAdapter.setListener(this);
         recyclerView.setAdapter(mAdapter);
+
     }
 
 
@@ -110,6 +167,41 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
         //load data from server here
         // add them to list
         //notify adapter
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseRef = database.getReference("workout").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        databaseRef.addChildEventListener(new ChildEventListener() {
+
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                WorkoutItem wi = dataSnapshot.getValue(WorkoutItem.class);
+                workout.add(wi);
+                mAdapter.setDataSet(workout);
+
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+            public void onCancelled(DatabaseError databaseError) {
+
+
+            }
+        });
+
+        mAdapter = new WorkoutItemAdapter (workout, this);
+        mAdapter.setListener(this);
+        recyclerView.setAdapter(mAdapter);
+
+
+
+
+
+
     }
 
     public void workoutBackButton(View view) {
@@ -210,14 +302,24 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
-    private void handleDataStore(WorkoutItem workoutItem){
+    private void handleDataStore(final WorkoutItem workoutItem){
         if(flag == AppConst.FLAG_SAVE){
             //store new exercise here
+            final int[] newID = new int[1];
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference databaseRef = database.getReference("workout").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).child(Integer.toString(lastID));
+            workoutItem.setId(lastID);
+            databaseRef.setValue(workoutItem);
             Toast.makeText(this, "Store: " + workoutItem.getExerciseName(), Toast.LENGTH_SHORT).show();
             mAdapter.addData(workoutItem);
+            workout.clear();
+            loadData();
         }
         else if(flag == AppConst.FLAG_EDIT){
             //update old exercise item here
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference databaseRef = database.getReference("workout").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).child(Integer.toString(workoutItem.getId()));
+            databaseRef.setValue(workoutItem);
             Toast.makeText(this, "Update: " + workoutItem.getExerciseName(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -231,6 +333,10 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         //delete exercise item here
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference databaseRef = database.getReference("workout").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).child(Integer.toString(workoutItem.getId()));
+                        databaseRef.removeValue();
+                        mAdapter.removeItemByID(workoutItem.getId());
                         Toast.makeText(WorkoutActivity.this, "Delete: " + workoutItem.getExerciseName(), Toast.LENGTH_SHORT).show();
                     }
                 })

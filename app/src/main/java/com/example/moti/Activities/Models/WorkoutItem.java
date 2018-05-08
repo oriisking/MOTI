@@ -1,14 +1,5 @@
 package com.example.moti.Activities.Models;
-/*
- *  ****************************************************************************
- *  * Created by : Md. Hasnain on 5/7/2018 at 4:19 PM.
- *  * Email : ashik.pstu.cse@gmail.com
- *  *
- *  * Last edited by : Md. Hasnain on 5/7/2018.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
- */
+
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -20,6 +11,10 @@ public class WorkoutItem implements Parcelable{
     private int exerciseWeight;
     private int exerciseRepeats;
 
+    public WorkoutItem()
+    {
+
+    }
     public WorkoutItem(int id, String exerciseDay, String exerciseName, int exerciseWeight, int exerciseRepeats) {
         this.id = id;
         this.exerciseDay = exerciseDay;
