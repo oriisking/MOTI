@@ -18,7 +18,13 @@
         <activity android:name=".ui.home.HomeActivity"></activity>
         <activity android:name=".ui.nutrition.NutritionActivity" />
         <activity android:name=".ui.progress.ProgressActivity" />
-        <activity android:name=".ui.workout.WorkoutActivity" />
+        <activity android:name=".ui.workout.WorkoutActivity"
+            android:parentActivityName=".ui.home.HomeActivity" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.home.HomeActivity" />
+        </activity>
         <activity android:name=".ui.profile.ProfileActivity" />
         <receiver android:name="com.example.util.receiver.MyReceiver"/>
         <activity android:name=".ui.splash.StartupActivity">
