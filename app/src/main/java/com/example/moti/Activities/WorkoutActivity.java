@@ -122,6 +122,7 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 WorkoutItem wi = dataSnapshot.getValue(WorkoutItem.class);
                 addNewItem(wi);
+                //
             }
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
