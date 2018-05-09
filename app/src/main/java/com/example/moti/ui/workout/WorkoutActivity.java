@@ -15,6 +15,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,11 +43,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkoutActivity extends AppCompatActivity implements View.OnClickListener, OnWorkoutClickListener{
-    private ImageView btnAddWorkout;
+public class WorkoutActivity extends AppCompatActivity implements OnWorkoutClickListener{
     private RecyclerView recyclerView;
-
-    Intent homeIntent;
 
     private WorkoutItemAdapter mAdapter;
     private List<WorkoutItem> workout  = new ArrayList<>();;
@@ -61,11 +60,8 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("WORKOUT");
         myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
-        myToolbar.setLogo(R.drawable.ic_fitness);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        homeIntent = new Intent(this, HomeActivity.class);
 
         initView();
 
@@ -79,12 +75,23 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_add_workout:
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_workout, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add_workout:
                 flag = AppConst.FLAG_SAVE;
                 showCustomDialog(null);
-                break;
+
+                return true;
+
+                default:
+                    return false;
         }
     }
 
@@ -103,9 +110,6 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initView() {
-        btnAddWorkout = (ImageView) findViewById(R.id.btn_add_workout);
-        btnAddWorkout.setOnClickListener(this);
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -162,10 +166,6 @@ public class WorkoutActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-    }
-
-    public void workoutBackButton(View view) {
-        startActivity(homeIntent);
     }
 
     /*

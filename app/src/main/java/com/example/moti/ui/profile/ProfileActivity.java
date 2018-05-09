@@ -7,8 +7,12 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -40,7 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     Intent loginIntent;
     SharedPreferences profileSP;
-    Intent homeIntent;
     EditText profileHourPicker;
     TimePickerDialog tpd;
     Calendar calendar;
@@ -75,7 +78,12 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        homeIntent = new Intent(this, HomeActivity.class);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle("PROFILE");
+        myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         loginIntent = new Intent(this, LoginActivity.class);
         profileHourPicker = (EditText) findViewById(R.id.profileHourPickerField);
         profileName = (AutoCompleteTextView) findViewById(R.id.profileNameField);
@@ -114,11 +122,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-        homeIntent = new Intent(this, HomeActivity.class);
         mDialog = new ProgressDialog(this);
 
 
@@ -139,6 +142,31 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkAuthenticationState();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_log_out:
+                logOut();
+
+                return true;
+
+            default:
+                return false;
+        }
+    }
 
     public void changeFieldsInit(ProfileDetails pd){
         try {
@@ -229,10 +257,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-    public void profileBackButton(View view) {
-        startActivity(homeIntent);
-    }
-    public void profileLogoutButton(View view) {
+
+    public void logOut() {
 
        /* loginSP =getSharedPreferences("Login", MODE_PRIVATE);
         SharedPreferences.Editor editor = loginSP.edit();
@@ -251,12 +277,6 @@ public class ProfileActivity extends AppCompatActivity {
     /*
     ---------------------------Security--------------------------------
     */
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkAuthenticationState();
-    }
 
     private void checkAuthenticationState() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

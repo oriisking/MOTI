@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -51,7 +52,6 @@ public class ProgressActivity extends AppCompatActivity {
 
     static final int CAMERA_REQUEST_CODE = 1;
 
-    Intent homeIntent;
     private RecyclerView progressList;
     private Uri imageUri;
     private ProgressItem pi;
@@ -74,6 +74,11 @@ public class ProgressActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle("PROGRESS");
+        myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Permission to the camera and files
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
@@ -82,7 +87,6 @@ public class ProgressActivity extends AppCompatActivity {
         }
 
         //Variables initialize
-        homeIntent = new Intent(this, HomeActivity.class);
         progressList = (RecyclerView) findViewById(R.id.progress_recyclerview);
         mDialog = new ProgressDialog(this);
 
@@ -124,9 +128,6 @@ public class ProgressActivity extends AppCompatActivity {
 
     }
 
-    public void progressBackButton(View view) {
-        startActivity(homeIntent);
-    }
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);

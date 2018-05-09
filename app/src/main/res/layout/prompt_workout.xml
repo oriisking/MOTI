@@ -112,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_5"
-            android:background="@drawable/btn_bg_black"
+            android:background="@drawable/btn_bg_primary"
             android:layout_weight="1"
             android:text="Save"
             android:textColor="@color/white"/>

@@ -7,7 +7,7 @@ package com.example.moti.ui.nutrition;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moti.R;
@@ -22,7 +22,7 @@ public class NutritionItemViewHolder extends RecyclerView.ViewHolder {
      TextView hour;
      TextView name;
      TextView calories;
-     ImageButton btn;
+     ImageView btn;
 
 
     public NutritionItemViewHolder(Activity activity, View itemView) {
@@ -31,7 +31,7 @@ public class NutritionItemViewHolder extends RecyclerView.ViewHolder {
         name = (TextView) itemView.findViewById(R.id.nutrition_item_name);
         hour = (TextView) itemView.findViewById(R.id.nutrition_item_hour);
         calories = (TextView) itemView.findViewById(R.id.nutrition_item_calories);
-        btn = (ImageButton) itemView.findViewById(R.id.nutrition_item_delete_button);
+        btn = (ImageView) itemView.findViewById(R.id.nutrition_item_delete_button);
 
 
     }
