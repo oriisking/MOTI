@@ -55,6 +55,13 @@
         <activity android:name=".ui.register.RegisterActivity" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.progress.ProgressImage" android:theme="@style/AppTheme.PopUpImage"></activity>
+
+        <activity
+            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor"
+            android:theme="@style/FinestWebViewTheme.Light" />
+
         <receiver android:name="com.example.util.receiver.Notification_reciever"/>
         <receiver android:name="com.example.util.receiver.MidNightReceiver"/>
 

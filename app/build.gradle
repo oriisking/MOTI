@@ -42,6 +42,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.pkmmte.view:circularimageview:1.1'
     implementation 'com.android.support:design:25.3.1'
+
+    //finest web view
+    implementation "com.thefinestartist:finestwebview:1.2.7"
 }
 apply plugin: 'com.google.gms.google-services'
 

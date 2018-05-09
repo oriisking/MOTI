@@ -2,4 +2,5 @@
     <string name="app_name">MOTI</string>
     <string name="action_add_workout">Add New</string>
     <string name="action_log_out">LOG OUT</string>
+    <string name="action_help">Help</string>
 </resources>

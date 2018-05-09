@@ -6,15 +6,19 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.moti.data.local.appconst.AppConst;
 import com.example.moti.ui.nutrition.NutritionActivity;
 import com.example.moti.ui.profile.ProfileActivity;
 import com.example.moti.ui.progress.ProgressActivity;
 import com.example.moti.ui.workout.WorkoutActivity;
 import com.example.moti.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -42,6 +46,40 @@ public class HomeActivity extends AppCompatActivity {
         loginSP = getSharedPreferences("Login", MODE_PRIVATE);
         String userName = loginSP.getString("Name", "");
         setTitle("WELCOME, " + FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_help:
+                gotoHelpAddress();
+
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private void gotoHelpAddress() {
+        FinestWebView.Builder webBuilder = new FinestWebView.Builder(this);
+        webBuilder.statusBarColorRes(R.color.colorPrimaryDark);
+        webBuilder.toolbarColorRes(R.color.colorPrimary);
+        webBuilder.titleDefaultRes(R.string.action_help);
+        webBuilder.showIconBack(true);
+        webBuilder.showIconForward(true);
+        webBuilder.showSwipeRefreshLayout(true);
+        webBuilder.showProgressBar(true);
+        webBuilder.setCustomAnimations(R.anim.activity_open_enter, R.anim.activity_open_exit, R.anim.activity_close_enter, R.anim.activity_close_exit);
+
+        webBuilder.show(AppConst.HELP_URL);
     }
 
     public void workoutButton(View view) {
