@@ -34,7 +34,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle("WELCOME, Bla");
+        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toString();
+        myToolbar.setTitle("WELCOME,  " + name);
         myToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(myToolbar);
 

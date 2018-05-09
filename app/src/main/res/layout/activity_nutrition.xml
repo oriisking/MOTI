@@ -79,7 +79,7 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

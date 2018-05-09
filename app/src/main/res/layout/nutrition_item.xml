@@ -18,7 +18,7 @@
             android:layout_weight="1"
             android:textSize="18sp"
             android:text="asasd"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimaryDark"
             android:id="@+id/nutrition_item_hour"
             android:gravity="center" />
 
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:textSize="18sp"
             android:text="asasd"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimaryDark"
             android:id="@+id/nutrition_item_name"
             android:gravity="center" />
 
@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:textSize="18sp"
             android:text="asasd"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimaryDark"
             android:id="@+id/nutrition_item_calories"
             android:gravity="center" />
 
