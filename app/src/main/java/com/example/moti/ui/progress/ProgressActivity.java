@@ -134,6 +134,7 @@ public class ProgressActivity extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
     public void progressAddButton(View view) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Date c = (Date) Calendar.getInstance().getTime();

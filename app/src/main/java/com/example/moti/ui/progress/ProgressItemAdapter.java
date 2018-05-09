@@ -74,8 +74,6 @@ public class ProgressItemAdapter extends RecyclerView.Adapter<ProgressItemViewHo
         holder.image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-
-
                 Bitmap[] ba = new Bitmap[position+1];
                 ProgressItem pi;
                 Uri uri;
@@ -89,8 +87,6 @@ public class ProgressItemAdapter extends RecyclerView.Adapter<ProgressItemViewHo
                         } catch (IOException ios) {
                             Toast.makeText(activity, ios.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-
-
                     }
                 }
                 catch(Exception ex)
@@ -176,9 +172,6 @@ class MyDownloadTask extends AsyncTask<String,Void,Void>
         this.pd.show();
 
     }
-
-
-
 
     protected void onPostExecute(Void result) {
         this.pd.dismiss();

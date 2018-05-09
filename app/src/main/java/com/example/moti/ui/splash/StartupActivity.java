@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.example.moti.ui.home.HomeActivity;
 import com.example.moti.ui.login.LoginActivity;
@@ -18,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Calendar;
 
 public class StartupActivity extends AppCompatActivity {
+    private ProgressBar progressBar;
 
     ImageButton loginButton;
     Intent loginIntent;
@@ -30,6 +33,8 @@ public class StartupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
         //SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         setNotification();
         loginIntent = new Intent(this, LoginActivity.class);
         homeIntent = new Intent(this, HomeActivity.class);
@@ -38,7 +43,14 @@ public class StartupActivity extends AppCompatActivity {
             @Override
             public void run(){
                 try{
-                    sleep(3000);
+                    sleep(1000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                    });
+                    sleep(2000);
                     startOneActivity();
                 }
                 catch(InterruptedException ex)
@@ -58,6 +70,8 @@ public class StartupActivity extends AppCompatActivity {
 
     private void startOneActivity() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
 
         if(user==null)
         {
