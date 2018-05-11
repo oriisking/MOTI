@@ -4,8 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -97,21 +99,27 @@ public class StartupActivity extends AppCompatActivity {
 
     private void setNotification() {
         Calendar calendar = Calendar.getInstance();
-
+        Calendar now = Calendar.getInstance();
 
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 00);
         calendar.set(Calendar.SECOND, 0);
 
-
-        Intent myIntent = new Intent(StartupActivity.this, MidNightReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(StartupActivity.this, 0, myIntent,0);
+        if (now.after(calendar)) {
+            Log.d("Hey","Added a day");
+            calendar.add(Calendar.DATE, 1);
+        }
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis()+1000, pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-                1000 * 60 * 60 * 24, pendingIntent);
-    }
+        Intent myIntent = new Intent(StartupActivity.this, MidNightReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(StartupActivity.this, 0, myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        myIntent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
+        alarmManager.cancel(pendingIntent);
+
+        //  alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis()+1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        Log.d("Alarm","Alarms set for everyday 12 am.");    }
 
 
 

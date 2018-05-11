@@ -62,8 +62,10 @@
             android:screenOrientation="sensor"
             android:theme="@style/FinestWebViewTheme.Light" />
 
-        <receiver android:name="com.example.util.receiver.Notification_reciever"/>
-        <receiver android:name="com.example.util.receiver.MidNightReceiver"/>
+        <receiver android:name="com.example.util.receiver.Notification_reciever" android:enabled="true"/>
+        <receiver android:name="com.example.util.receiver.MidNightReceiver" android:enabled="true"/>
+        <service android:name="com.example.util.helper.NotificationService1"
+            />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
